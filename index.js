@@ -5,6 +5,7 @@ const elementsToShow = [
   "light-focus",
   "punching",
 ];
+
 const lightsToHide = [
   "light1",
   "light2",
@@ -14,11 +15,14 @@ const lightsToHide = [
   "light3-beam",
   "light-focus",
 ];
+
 const elementsWithDelays = [
   { id: "celebrating", delay: 2200 },
   { id: "boxing-ring", delay: 2750 },
   { id: "crowd", delay: 3300 },
 ];
+
+const hiddenImageId = "ring-girl"; // Replace with the actual ID of your image
 
 function startScene() {
   // Delay animations for 0ms after clicking the trigger
@@ -68,38 +72,53 @@ function startScene() {
     }, delay);
   });
 
-  // Shift the whole thing to the right
-  function easeInOutQuad(t) {
-    return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
-  }
+  // Shift elements to the right and fade in hidden image with right-to-left effect
   const elementsToMove = ["celebrating", "boxing-ring", "crowd"];
+  const duration = 1500; // Animation duration in ms
+  let startTime;
+
+  function easeInOutCubic(t) {
+    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  }
+
+  function animateShift(currentTime) {
+    if (!startTime) startTime = currentTime;
+    const elapsed = currentTime - startTime;
+    const progress = Math.min(elapsed / duration, 1); // Ensure it doesn't exceed 1
+    const easedProgress = easeInOutCubic(progress);
+    const translateX = easedProgress * 60; // Move by 60vw
+
+    elementsToMove.forEach((id) => {
+      const element = document.getElementById(id);
+      if (element) {
+        element.style.transform = `translate(calc(-50% + ${translateX}vw), -40%)`;
+      }
+    });
+
+    // Handle the right-to-left fade-in effect for the hidden image
+    const hiddenImage = document.getElementById(hiddenImageId);
+    if (hiddenImage) {
+      if (progress === 0) {
+        hiddenImage.style.visibility = "visible"; // Make it visible at the start
+      }
+
+      // Create a mask effect from right to left
+      const revealAmount = easedProgress * 100; // % of reveal from right to left
+      hiddenImage.style.opacity = easedProgress; // Gradually increase opacity
+      hiddenImage.style.maskImage = `linear-gradient(to left, rgba(0, 0, 0, 1) ${revealAmount}%, rgba(0, 0, 0, 0) ${
+        revealAmount + 30
+      }%)`;
+      hiddenImage.style.webkitMaskImage = `linear-gradient(to left, rgba(0, 0, 0, 1) ${revealAmount}%, rgba(0, 0, 0, 0) ${
+        revealAmount + 30
+      }%)`; // Safari compatibility
+    }
+
+    if (progress < 1) {
+      requestAnimationFrame(animateShift);
+    }
+  }
 
   setTimeout(() => {
-    const duration = 1500; // Animation duration in ms
-    const startTime = performance.now();
-
-    function easeInOutCubic(t) {
-      return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-    }
-
-    function animateShift(currentTime) {
-      const elapsed = currentTime - startTime;
-      const progress = Math.min(elapsed / duration, 1); // Ensure it doesn't exceed 1
-      const easedProgress = easeInOutCubic(progress);
-      const translateX = easedProgress * 60; // Move by 60vw
-
-      elementsToMove.forEach((id) => {
-        const element = document.getElementById(id);
-        if (element) {
-          element.style.transform = `translate(calc(-50% + ${translateX}vw), -40%)`;
-        }
-      });
-
-      if (progress < 1) {
-        requestAnimationFrame(animateShift);
-      }
-    }
-
     requestAnimationFrame(animateShift);
   }, 3850);
 }

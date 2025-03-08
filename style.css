@@ -6,14 +6,14 @@
   box-sizing: border-box;
 }
 .sky {
-  height: 60vh;
+  height: 200vh;
   width: 100%;
   background-color: rgb(0, 0, 67);
 }
 
 .canvas {
   position: absolute;
-  top: 60vh;
+  top: 200vh;
   height: 40vh;
   width: 100%;
   background-color: black;
@@ -148,4 +148,15 @@ img {
 .scene-trigger.fade-out {
   opacity: 0;
   transition: opacity 0.5s ease-out;
+}
+.ring-girl {
+  background-color: aliceblue;
+  border: 3px solid rgb(64, 112, 255);
+  border-radius: 10px;
+  left: 10vw;
+  top: 16vh;
+  filter: none !important;
+  width: 10vw !important;
+  height: auto !important;
+  visibility: hidden;
 }
