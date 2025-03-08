@@ -1,0 +1,151 @@
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.sky {
+  height: 60vh;
+  width: 100%;
+  background-color: rgb(0, 0, 67);
+}
+
+.canvas {
+  position: absolute;
+  top: 60vh;
+  height: 40vh;
+  width: 100%;
+  background-color: black;
+}
+.light1-container {
+  position: absolute;
+}
+.light1-source {
+  position: absolute;
+  height: 15px;
+  width: 15px;
+  border-radius: 50%;
+  background-color: blue;
+}
+.light2-container {
+  position: absolute;
+
+  left: 20vw;
+}
+.light2-source {
+  position: absolute;
+  height: 15px;
+  width: 15px;
+  border-radius: 50%;
+  background-color: red;
+}
+.light3-container {
+  position: absolute;
+  left: 40vw;
+}
+.light3-source {
+  position: absolute;
+  height: 15px;
+  width: 15px;
+  border-radius: 50%;
+  background-color: green;
+}
+.light-focus {
+  position: absolute;
+  visibility: hidden;
+  height: 15px;
+  width: 10vw;
+  border-radius: 50%;
+  background-color: rgb(132, 132, 132);
+  left: 20vw;
+  top: 18vh;
+}
+.light1-beam {
+  position: absolute;
+  visibility: hidden;
+  top: 7.5px;
+  width: 30vw;
+  height: 18vh;
+  background-color: rgba(100, 100, 255, 0.2);
+  clip-path: polygon(0 0, calc(15px) 0, 100% 100%, 20vw 100%);
+}
+.light2-beam {
+  position: absolute;
+  visibility: hidden;
+  top: 7.5px;
+  width: 30vw;
+  height: 18vh;
+  background-color: rgba(255, 100, 100, 0.2);
+  clip-path: polygon(0 0, calc(15px) 0, 10vw 100%, 0 100%);
+}
+.light3-beam {
+  position: absolute;
+  visibility: hidden;
+  top: 7.5px;
+  left: -20vw;
+  width: 30vw;
+  height: 18vh;
+  background-color: rgba(100, 255, 100, 0.2);
+  clip-path: polygon(20vw 0, calc(20vw + 15px) 0, 10vw 100%, 0 100%);
+}
+.animation-container {
+  position: absolute;
+  width: 10vw;
+  height: 10vh;
+  left: 25vw;
+  top: 17vh;
+}
+img {
+  position: absolute;
+  transform-origin: 50% 40%;
+  transform: translate(-50%, -40%);
+  width: 20vw;
+  height: auto;
+  filter: invert(1) brightness(1000%);
+}
+#crowd,
+#boxing-ring,
+#celebrating,
+#punching {
+  visibility: hidden;
+}
+
+@keyframes breathing {
+  0% {
+    transform: scale(0.95);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(0.95);
+    opacity: 1;
+  }
+}
+
+.scene-trigger {
+  position: absolute;
+  height: 15px;
+  width: 10vw;
+  border: 3px dashed grey;
+  border-radius: 50%;
+  background-color: rgb(0, 0, 0);
+  left: 20vw;
+  top: 18vh;
+  animation: breathing 3s ease-in-out infinite;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out, opacity 0.5s ease-out;
+}
+
+.scene-trigger:active {
+  background-color: rgb(41, 41, 41);
+  animation: none; /* Stop breathing animation */
+}
+
+.scene-trigger.fade-out {
+  opacity: 0;
+  transition: opacity 0.5s ease-out;
+}
