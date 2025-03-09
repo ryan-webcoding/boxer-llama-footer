@@ -22,21 +22,24 @@ const elementsWithDelays = [
   { id: "crowd", delay: 3300 },
 ];
 
-const hiddenImageId = "ring-girl"; // The image that fades in from right-to-left
-const formContainerId = "form-container"; // The form container that fades in from top-to-bottom
+const hiddenImageId = "ring-girl";
+const formContainerId = "form-container";
+
+// New independent variables for form animation
+const formFadeInDelay = 4500; // Delay before form starts fading in (adjust as needed)
+const formFadeInDuration = 1000; // Duration of the form fade-in animation (adjust as needed)
 
 function startScene() {
-  // Delay animations for 0ms after clicking the trigger
   setTimeout(() => {
     elementsToShow.forEach((id) => {
       const element = document.getElementById(id);
       if (element) {
-        element.style.opacity = 0; // Ensure it's initially hidden
-        element.style.visibility = "visible"; // Make it visible but transparent
+        element.style.opacity = 0;
+        element.style.visibility = "visible";
 
         let opacity = 0;
         const fadeIn = setInterval(() => {
-          opacity += 0.15; // Adjust the fade speed
+          opacity += 0.15;
           element.style.opacity = opacity;
           if (opacity >= 1) {
             clearInterval(fadeIn);
@@ -46,48 +49,44 @@ function startScene() {
     });
   }, 0);
 
-  // Hide the punching animation
   setTimeout(() => {
     document.getElementById("punching").style.visibility = "hidden";
   }, 2200);
 
-  // Hide lights after 2750ms
   setTimeout(() => {
     lightsToHide.forEach((id) => {
       const element = document.getElementById(id);
       if (element) {
-        element.style.transition = "opacity 1s ease-out"; // Smooth fade out
-        element.style.opacity = "0"; // Start fade out
+        element.style.transition = "opacity 1s ease-out";
+        element.style.opacity = "0";
 
         setTimeout(() => {
           element.style.visibility = "hidden";
-        }, 1000); // Matches the transition duration
+        }, 1000);
       }
     });
   }, 2750);
 
-  // Handle elements with different delays
   elementsWithDelays.forEach(({ id, delay }) => {
     setTimeout(() => {
       document.getElementById(id).style.visibility = "visible";
     }, delay);
   });
 
-  // Shift elements to the right and fade in hidden image with right-to-left effect
   const elementsToMove = ["celebrating", "boxing-ring", "crowd"];
-  const duration = 1500; // Animation duration in ms
-  let startTime;
+  const duration = 1500;
+  let startTimeShift, startTimeForm;
 
   function easeInOutCubic(t) {
     return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
   }
 
   function animateShift(currentTime) {
-    if (!startTime) startTime = currentTime;
-    const elapsed = currentTime - startTime;
-    const progress = Math.min(elapsed / duration, 1); // Ensure it doesn't exceed 1
+    if (!startTimeShift) startTimeShift = currentTime;
+    const elapsed = currentTime - startTimeShift;
+    const progress = Math.min(elapsed / duration, 1);
     const easedProgress = easeInOutCubic(progress);
-    const translateX = easedProgress * 60; // Move by 60vw
+    const translateX = easedProgress * 60;
 
     elementsToMove.forEach((id) => {
       const element = document.getElementById(id);
@@ -96,22 +95,20 @@ function startScene() {
       }
     });
 
-    // Handle the right-to-left fade-in effect for the hidden image
     const hiddenImage = document.getElementById(hiddenImageId);
     if (hiddenImage) {
       if (progress === 0) {
-        hiddenImage.style.visibility = "visible"; // Make it visible at the start
+        hiddenImage.style.visibility = "visible";
       }
 
-      // Create a mask effect from right to left
-      const revealAmount = easedProgress * 100; // % of reveal from right to left
-      hiddenImage.style.opacity = easedProgress; // Gradually increase opacity
+      const revealAmount = easedProgress * 100;
+      hiddenImage.style.opacity = easedProgress;
       hiddenImage.style.maskImage = `linear-gradient(to left, rgba(0, 0, 0, 1) ${revealAmount}%, rgba(0, 0, 0, 0) ${
         revealAmount + 30
       }%)`;
       hiddenImage.style.webkitMaskImage = `linear-gradient(to left, rgba(0, 0, 0, 1) ${revealAmount}%, rgba(0, 0, 0, 0) ${
         revealAmount + 30
-      }%)`; // Safari compatibility
+      }%)`;
     }
 
     if (progress < 1) {
@@ -120,20 +117,19 @@ function startScene() {
   }
 
   function animateFormFadeIn(currentTime) {
-    if (!startTime) startTime = currentTime;
-    const elapsed = currentTime - startTime;
-    const progress = Math.min(elapsed / duration, 1);
+    if (!startTimeForm) startTimeForm = currentTime;
+    const elapsed = currentTime - startTimeForm;
+    const progress = Math.min(elapsed / formFadeInDuration, 1);
     const easedProgress = easeInOutCubic(progress);
 
     const formContainer = document.getElementById(formContainerId);
     if (formContainer) {
       if (progress === 0) {
-        formContainer.style.visibility = "visible"; // Make it visible at the start
+        formContainer.style.visibility = "visible";
       }
 
-      // Move from top to bottom
-      const translateY = (1 - easedProgress) * -50; // Start at -50px and move to 0px
-      formContainer.style.opacity = easedProgress; // Gradually increase opacity
+      const translateY = (1 - easedProgress) * -50;
+      formContainer.style.opacity = easedProgress;
       formContainer.style.transform = `translateY(${translateY}px)`;
     }
 
@@ -144,8 +140,11 @@ function startScene() {
 
   setTimeout(() => {
     requestAnimationFrame(animateShift);
-    requestAnimationFrame(animateFormFadeIn); // Start the new form fade-in animation
-  }, 3850);
+  }, 3850); // Start shift animation
+
+  setTimeout(() => {
+    requestAnimationFrame(animateFormFadeIn);
+  }, formFadeInDelay); // Start form fade-in animation independently
 }
 
 // Scene Trigger Handling
@@ -153,15 +152,15 @@ document.addEventListener("DOMContentLoaded", function () {
   const trigger = document.querySelector(".scene-trigger");
 
   trigger.addEventListener("mousedown", function () {
-    trigger.style.backgroundColor = "rgb(41, 41, 41)"; // Change color on click
-    trigger.style.animation = "none"; // Stop animation
+    trigger.style.backgroundColor = "rgb(41, 41, 41)";
+    trigger.style.animation = "none";
   });
 
   trigger.addEventListener("mouseup", function () {
-    trigger.classList.add("fade-out"); // Apply fade-out effect
+    trigger.classList.add("fade-out");
     setTimeout(() => {
-      trigger.style.display = "none"; // Hide after fade-out
-      setTimeout(startScene, 1000); // Start animations 1 second after fading out
-    }, 500); // Match fade-out duration
+      trigger.style.display = "none";
+      setTimeout(startScene, 1000);
+    }, 500);
   });
 });
