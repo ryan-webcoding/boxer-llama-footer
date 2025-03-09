@@ -26,7 +26,7 @@ const hiddenImageId = "ring-girl";
 const formContainerId = "form-container";
 
 // New independent variables for form animation
-const formFadeInDelay = 4500; // Delay before form starts fading in (adjust as needed)
+const formFadeInDelay = 4800; // Delay before form starts fading in (adjust as needed)
 const formFadeInDuration = 1000; // Duration of the form fade-in animation (adjust as needed)
 
 function startScene() {
