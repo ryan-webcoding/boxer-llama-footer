@@ -15,6 +15,7 @@
   position: absolute;
   top: 200vh;
   height: 40vh;
+
   width: 100%;
   background-color: black;
 }
@@ -101,7 +102,7 @@ img {
   transform-origin: 50% 40%;
   transform: translate(-50%, -40%);
   width: 20vw;
-  height: auto;
+  height: 33vh;
   filter: invert(1) brightness(1000%);
 }
 #crowd,
@@ -157,6 +158,68 @@ img {
   top: 16vh;
   filter: none !important;
   width: 10vw !important;
-  height: auto !important;
+  height: 32vh !important;
   visibility: hidden;
+}
+.frame {
+  position: absolute;
+  left: 60vw;
+  height: 40vh;
+  top: 16vh;
+  filter: none !important;
+  pointer-events: none;
+}
+.form {
+  left: 50vw;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  background-color: rgb(108, 53, 21);
+  padding: 1vh;
+  justify-content: center;
+  align-items: center;
+  height: 40vh;
+  width: 20vw; /* Adjustable width */
+  transform-origin: center;
+  gap: 1vh;
+}
+.form-components {
+  width: 72%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2vmin;
+}
+input,
+textarea {
+  width: 100%;
+}
+label {
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  font-size: 1.5vmin;
+  color: rgba(255, 255, 255, 0.3);
+}
+.submit-button {
+  width: 100%;
+  color: rgba(255, 255, 255, 1);
+  background-color: rgb(116, 31, 0);
+}
+.submit-button:hover {
+  color: red;
+}
+
+.submit-button::after {
+  content: "Send";
+}
+
+.submit-button:hover::after {
+  content: "Sign the Contract🩸";
+}
+
+.label-input {
+  width: 100%;
+}
+.form-title {
+  color: rgba(255, 207, 193, 0.3);
+  font-size: 2vmin;
 }
