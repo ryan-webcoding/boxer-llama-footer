@@ -22,7 +22,8 @@ const elementsWithDelays = [
   { id: "crowd", delay: 3300 },
 ];
 
-const hiddenImageId = "ring-girl"; // Replace with the actual ID of your image
+const hiddenImageId = "ring-girl"; // The image that fades in from right-to-left
+const formContainerId = "form-container"; // The form container that fades in from top-to-bottom
 
 function startScene() {
   // Delay animations for 0ms after clicking the trigger
@@ -118,8 +119,32 @@ function startScene() {
     }
   }
 
+  function animateFormFadeIn(currentTime) {
+    if (!startTime) startTime = currentTime;
+    const elapsed = currentTime - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    const easedProgress = easeInOutCubic(progress);
+
+    const formContainer = document.getElementById(formContainerId);
+    if (formContainer) {
+      if (progress === 0) {
+        formContainer.style.visibility = "visible"; // Make it visible at the start
+      }
+
+      // Move from top to bottom
+      const translateY = (1 - easedProgress) * -50; // Start at -50px and move to 0px
+      formContainer.style.opacity = easedProgress; // Gradually increase opacity
+      formContainer.style.transform = `translateY(${translateY}px)`;
+    }
+
+    if (progress < 1) {
+      requestAnimationFrame(animateFormFadeIn);
+    }
+  }
+
   setTimeout(() => {
     requestAnimationFrame(animateShift);
+    requestAnimationFrame(animateFormFadeIn); // Start the new form fade-in animation
   }, 3850);
 }
 

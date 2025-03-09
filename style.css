@@ -223,3 +223,7 @@ label {
   color: rgba(255, 207, 193, 0.3);
   font-size: 2vmin;
 }
+
+#form-container {
+  visibility: hidden;
+}
